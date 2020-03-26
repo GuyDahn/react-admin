@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMediaQuery } from '@material-ui/core';
 import {
     List,
     SimpleList,
@@ -20,6 +21,7 @@ const PostTitle = ({ record }) => {
 };
 
 const PostFilter = (props) => (
+
     <Filter {...props}>
         <TextInput label="Search" source="q" alwaysOn />
         <ReferenceInput label="User" source="userId" reference="users" allowEmpty>
@@ -28,25 +30,30 @@ const PostFilter = (props) => (
     </Filter>
 );
 
-export const PostList = props => (
-    <List filters={<PostFilter />} {...props}>
-     
-            <SimpleList
-                primaryText={record => record.title}
-                secondaryText={record => `${record.views} views`}
-                tertiaryText={record => new Date(record.published_at).toLocaleDateString()}
-            />
-            {/* <TextField source="id" />
-            <ReferenceField source="userId" reference="users">
-                <TextField source="name" />
-            </ReferenceField>
-            <TextField source="id" />
-            <TextField source="title" />
-            {/* <TextField source="body" /> 
-            <EditButton /> */}
-
-    </List>
-);
+export const PostList = (props) => {
+    const isSmall = useMediaQuery(theme => theme.breakpoints.down('sm'))
+    return (
+        <List filters={<PostFilter />} {...props}>
+            {isSmall ? (
+                <SimpleList
+                    primaryText={record => record.title}
+                    secondaryText={record => `${record.views} views`}
+                    tertiaryText={record => new Date(record.published_at).toLocaleDateString()}
+                />
+            ) : (
+                    <Datagrid>
+                        <TextField source="id" />
+                        <ReferenceField label="User" source="userId" reference="users">
+                            <TextField source="name" />
+                        </ReferenceField>
+                        <TextField source="title" />
+                        <TextField source="body" />
+                        <EditButton />
+                    </Datagrid>
+                )}
+        </List>
+    )
+};
 
 export const PostEdit = props => (
     <Edit title={<PostTitle />} {...props}>
