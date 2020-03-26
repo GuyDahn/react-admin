@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     List,
+    SimpleList,
     Datagrid,
     TextField,
     ReferenceField,
@@ -29,16 +30,21 @@ const PostFilter = (props) => (
 
 export const PostList = props => (
     <List filters={<PostFilter />} {...props}>
-        <Datagrid>
-            <TextField source="id" />
+     
+            <SimpleList
+                primaryText={record => record.title}
+                secondaryText={record => `${record.views} views`}
+                tertiaryText={record => new Date(record.published_at).toLocaleDateString()}
+            />
+            {/* <TextField source="id" />
             <ReferenceField source="userId" reference="users">
                 <TextField source="name" />
             </ReferenceField>
             <TextField source="id" />
             <TextField source="title" />
-            {/* <TextField source="body" /> */}
-            <EditButton />
-        </Datagrid>
+            {/* <TextField source="body" /> 
+            <EditButton /> */}
+
     </List>
 );
 
